@@ -1,0 +1,318 @@
+; C file for demonstration (containing switch-case statement, for-loop, while-loop, if statement, assignment operation)
+
+/*
+; --------------------------------------------------C CODE STARTS HERE------------------------------------------------------
+#include<stdio.h>
+int main()
+{
+    int control_line = 1;
+    switch (control_line)
+    {
+        case 1:
+        {
+            int i;
+            int a=4,b=6,ans=1;
+            for(i=0;i<b;i++)
+            {
+                ans = ans * a;
+            }
+            printf("%d ** %d = %d", a, b, ans);
+            break;
+        }
+
+        case 2:
+        {
+            int arr[] = {-2, 7, 4, 0, 3};
+            int i=0, n=5, min = arr[0];
+            while(i < n)
+            {
+                if(arr[i] < min)
+                {
+                    min = arr[i];
+                }
+                i++;
+            }
+            printf("Minimum of array [ ");
+            for(i=0;i<n;i++)
+                printf("%d ", arr[i]);
+            printf("] is ");
+            printf("%d", min);
+            break;
+        }
+
+        default:
+        {
+            printf("This is a DEFAULT message");
+            break;
+        }
+    }
+    return 0;
+}
+; --------------------------------------------------C CODE ENDS HERE------------------------------------------------------
+
+
+CODE EXPLANATION
+The code has two switch cases
+    case 1 has the code for exponentiation of two positive numbers
+    case 2 has the code to find the minimum element in the given array and print it
+*/
+
+; --------------------------------------------------ASSEMBLY CODE STARTS HERE------------------------------------------------------
+	.file	"foo.c"
+	.text
+	.section	.rodata
+.LC0:
+	.string	"%d ** %d = %d"
+.LC1:
+	.string	"Minimum of array [ "
+.LC2:
+	.string	"%d "
+.LC3:
+	.string	"] is "
+.LC4:
+	.string	"%d"
+.LC5:
+	.string	"This is a DEFAULT message"
+	.text
+	.globl	main
+	.type	main, @function
+main:								; main code begins
+.LFB0:
+	.cfi_startproc
+	endbr64
+	pushq	%rbp					; push frame pointer(%rbp) onto the stack
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	subq	$64, %rsp
+	movq	%fs:40, %rax
+	movq	%rax, -8(%rbp)
+	xorl	%eax, %eax
+	movl	$1, -48(%rbp)			; move immediate value '1' to variable 'control_line'
+									; SWITCH-CASE STATEMENT
+	cmpl	$1, -48(%rbp)			; compare '1' and value of 'control_line'
+	je	.L2							; jump to '.L2' (i.e. case 1) if (1 == control_line)
+	cmpl	$2, -48(%rbp)			; compare 2 and 'control_line'
+	je	.L3							; jump to '.L3' (i.e. case 2) if (2 == control_line)
+	jmp	.L15						; jump to '.L15' (i.e. default case) if (control_line is other than 1 or 2)
+.L2:
+	movl	$4, -40(%rbp)			; move the immediate value '4' to variable 'a'
+	movl	$6, -36(%rbp)			; move the immediate value '6' to variable 'b'
+	movl	$1, -60(%rbp)			; move the immediate value '1' to variable 'ans'
+	movl	$0, -64(%rbp)			; move the immediate value '0' to variable 'i'
+	jmp	.L5							; jump to '.L5' (i.e. for-loop)
+.L6:
+									; BODY OF FOR-LOOP IN CASE 1 OF SWITCH-CASE STATEMENT
+	movl	-60(%rbp), %eax			; move value of variable 'ans' into register '%eax' temporarily
+	imull	-40(%rbp), %eax			; effectively multiply values of variables 'a' and 'ans' and store result into register temporarily 
+	movl	%eax, -60(%rbp)			; move value of register '%eax' into variable 'ans'
+	addl	$1, -64(%rbp)			; add the immediate value '1' to value of variable 'i'
+.L5:
+									; FOR-LOOP IN CASE 1 OF SWITCH-CASE STATEMENT
+	movl	-64(%rbp), %eax			; move value of variable 'i' into register '%eax' temporarily
+	cmpl	-36(%rbp), %eax			; effectively compare values into variables 'b' and 'i'
+	jl	.L6							; jump to '.L6' (i.e. for-loop body) if (i < b)
+	movl	-60(%rbp), %ecx			; move value of variable 'ans' to register '%ecx' temporarily for the printf function
+	movl	-36(%rbp), %edx			; move value of variable 'b' to register '%edx' temporarily for the printf function
+	movl	-40(%rbp), %eax			; move value of variable 'a' to register '%eax' temporarily for the printf function
+	movl	%eax, %esi
+	leaq	.LC0(%rip), %rdi
+	movl	$0, %eax
+	call	printf@PLT				; call printf function to print "%d ** %d = %d"
+	jmp	.L7							; jump to '.L7' (i.e. to perform procedures before end of function call)
+.L3:
+	movl	$-2, -32(%rbp)			; move immediate value '-2' into variable 'arr[0]'
+	movl	$7, -28(%rbp)			; move immediate value '7' into variable 'arr[1]'
+	movl	$4, -24(%rbp)			; move immediate value '4' into variable 'arr[2]'
+	movl	$0, -20(%rbp)			; move immediate value '0' into variable 'arr[3]'
+	movl	$3, -16(%rbp)			; move immediate value '3' into variable 'arr[4]'
+	movl	$0, -56(%rbp)			; move immediate value '-0' into variable 'i'
+	movl	$5, -44(%rbp)			; move immediate value '5' into variable 'n'
+	movl	-32(%rbp), %eax			; move value of variable 'arr[0]' into register '%eax' temporarily
+	movl	%eax, -52(%rbp)			; move value of register '%eax' into variable 'min'
+	jmp	.L8							; jump to '.L8' (i.e. while-loop)
+.L10:
+									; BODY OF WHILE-LOOP
+									; IF STATEMENT
+	movl	-56(%rbp), %eax			; move the value of variable 'i' into register '%eax' temporarily
+	cltq							; sign extends '%eax' from 4 bytes into 8 bytes, and store in '%rax'
+	movl	-32(%rbp,%rax,4), %eax	; move value of variable 'arr[i]' into register '%eax' temporarily (using offset of i from base address of array)
+	cmpl	%eax, -52(%rbp)			; effectively compare values into variables 'arr[i]' and 'min'
+	jle	.L9							; jump to '.L9' if (min <= arr[i]) (Escape the if statement)
+									; BODY OF IF STATEMENT
+	movl	-56(%rbp), %eax			; move the value of variable 'i' into register '%eax' temporarily
+	cltq							; sign extends '%eax' from 4 bytes into 8 bytes, and store in '%rax'
+	movl	-32(%rbp,%rax,4), %eax	; move value of variable 'arr[i]' into register '%eax' temporarily (using offset of i from base address of array)
+	movl	%eax, -52(%rbp)			; move the value of register '%eax' into variable 'min'
+.L9:
+	addl	$1, -56(%rbp)			; add the immediate value '1' to value of variable 'i'
+.L8:
+									; WHILE-LOOP
+	movl	-56(%rbp), %eax			; move the value of variable 'i' into register '%eax' temporarily
+	cmpl	-44(%rbp), %eax			; effectively compare values into variables 'n' and 'i'
+	jl	.L10						; jump to '.L10' (i.e. while-loop) if (i < n)
+	leaq	.LC1(%rip), %rdi
+	movl	$0, %eax				; clear register '%eax'
+	call	printf@PLT				; call printf function to print "Minimum of array [ "
+	movl	$0, -56(%rbp)			; move the immediate value '0' into variable 'i'
+	jmp	.L11						; jump to '.L11' (i.e. for-loop body)
+.L12:
+									; BODY OF FOR-LOOP IN CASE 2 OF SWITCH-CASE STATEMENT
+	movl	-56(%rbp), %eax			; move value of variable 'i' into register '%eax' temporarily
+	cltq							; sign extends '%eax' from 4 bytes into 8 bytes, and store in '%rax'
+	movl	-32(%rbp,%rax,4), %eax	; move value of variable 'arr[i]' into register '%eax' temporarily (using offset of i from base address of array)
+	movl	%eax, %esi
+	leaq	.LC2(%rip), %rdi
+	movl	$0, %eax				; clear register '%eax'
+	call	printf@PLT				; call printf function to print "%d "
+	addl	$1, -56(%rbp)			; add the immediate value '1' to value of variable 'i'
+.L11:
+									; FOR-LOOP IN CASE 2 OF SWITCH-CASE STATEMENT
+	movl	-56(%rbp), %eax			; move the value of variable 'i' into register '%eax' temporarily
+	cmpl	-44(%rbp), %eax			; effectively compare values into variables 'n' and 'i'
+	jl	.L12						; jump to '.L12' (i.e. for-loop body)
+	leaq	.LC3(%rip), %rdi
+	movl	$0, %eax				; clear register '%eax'
+	call	printf@PLT				; call printf function to print "] is "
+	movl	-52(%rbp), %eax			; move value of variable 'min' into register '%eax' temporarily
+	movl	%eax, %esi
+	leaq	.LC4(%rip), %rdi
+	movl	$0, %eax
+	call	printf@PLT				; call printf function to print "%d"
+	jmp	.L7							; jump to '.L7' (i.e. to perform procedures before end of function call)
+.L15:
+	leaq	.LC5(%rip), %rdi		
+	movl	$0, %eax
+	call	printf@PLT				; call printf function to print "This is a DEFAULT message"
+	nop								; no operation
+.L7:
+	movl	$0, %eax
+	movq	-8(%rbp), %rdx
+	xorq	%fs:40, %rdx
+	je	.L14						; jump to '.L14' to end the function call
+	call	__stack_chk_fail@PLT	; calling stack fail flag if some exception occurs
+.L14:
+	leave
+	.cfi_def_cfa 7, 8
+	ret								; return control to the return address located on the stack
+	.cfi_endproc
+.LFE0:
+	.size	main, .-main
+	.ident	"GCC: (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0"
+	.section	.note.GNU-stack,"",@progbits
+	.section	.note.gnu.property,"a"
+	.align 8
+	.long	 1f - 0f
+	.long	 4f - 1f
+	.long	 5
+0:
+	.string	 "GNU"
+1:
+	.align 8
+	.long	 0xc0000002
+	.long	 3f - 2f
+2:
+	.long	 0x3
+3:
+	.align 8
+4:
+; --------------------------------------------------ASSEMBLY CODE ENDS HERE-------------------------------------------------------
+/*
+ANALYSIS OF ASSEMBLY CODE
+
+Location stored		Variable
+-48(%rbp)			control_line
+-40(%rbp)			a
+-36(%rbp)			b
+-60(%rbp)			ans
+-64(%rbp)			i
+
+-32(%rbp)			arr[0]
+-28(%rbp)			arr[1]
+-24(%rbp)			arr[2]
+-20(%rbp)			arr[3]
+-16(%rbp)			arr[4]
+-56(%rbp)			i
+-44(%rbp)			n
+-52(%rbp)			min
+
+
+SWITCH-CASE STATEMENT
+The translation of the switch-case statement can be seen in label '.LFB0'
+It is roughly translated as
+	case 1 is compared with the switch variable
+		if it matched
+			conditional jump to corrresonding case block (here, 'je	.L2')
+		else
+			continue the flow of the program
+	case 2 is compared with the switch variable
+		if it matched
+			conditional jump to corrresonding case block (here, 'je	.L3')
+		else
+			continue the flow of the program
+	...
+	similarly all cases are compared till any one gets satisfied
+	...
+	(If no case is matched)Jump to the default case (here, 'jmp	.L15')
+
+
+IF STATEMENT
+The translation of the if statement can be seen in label '.L10'.
+It is roughly translated as
+	compare values according to the condition.
+	if given condition is NOT satisfied,
+		exit the body of if statement (jump to else part if exists, or else continue the control flow outside the if statement body) by a conditional jump statement(in this case 'jle .L9').
+	else,
+		continue the flow of the program.
+
+
+FOR-LOOP
+There are two for-loops present in the program, in the labels mentioned below:
+('.L6', '.L5')
+('.L12', '.L11')
+I observed that the two labels are for two purposes: (Taking the example of for-loop in case1 of switch-case statement)
+1)Label for condition check (here, '.L5')
+    compare values according to the condition.
+    if given condition is satisfied,
+        jump to the label where body of for-loop is contained, using a conditional jump statement
+    else
+        the control is flowed normally, and the operations outside the for-loop are executed
+2)Label for body of while-loop (here, '.L6')
+    the statements in body of while-loop are executed
+    the increment/decrement part of the while loop is translated into an add/sub operation
+    the control is flowed normally
+
+
+WHILE-LOOP
+There is a while-loop present in the program, stretched across the labels '.L10', '.L9', '.L8'.
+I observed that the three labels are for three purposes:
+
+1)Label for condition check (here, '.L8')
+    compare values according to the condition.
+    if given condition is satisfied,
+        jump to the label where body of while-loop is contained, using a conditional jump statement
+    else
+        the control is flowed normally, and the operations outside the while-loop are executed
+2)Label for body of while-loop (here, '.L10')
+    the statements in body of while-loop are executed
+    the control is flowed normally
+3)Label for increment/decrement (here, 'L9')
+    if there is an increment or decrement statement at the end of the while-loop, it is translated into an add/sub operation
+    the control is flowed normally
+
+
+ASSIGNMENT OPERATION
+There are two kinds of assingment operations observed :
+1)assignment of immediate value
+As it can be observed in label '.L2',
+Move operations are used for assignment of variables.
+The immediate value is directly moved to the variable.
+
+2)assignment of value of a variable
+As it can be observed in label '.L10',
+	movl	-32(%rbp,%rax,4), %eax
+	movl	%eax, -52(%rbp)
+The value of variable (here, arr[i]) is first stored in a temporary register, later the value in the register is moved into the variable(here, 'min')
+
+*/
